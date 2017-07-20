@@ -29,15 +29,22 @@ Overall this method changes the game compared to GATK and seems to be able to
 fix many issues in the GATK way (described
 [here](https://software.broadinstitute.org/gatk/best-practices/bp_3step.php?case=GermShortWGS)[1])
 
-The way DeepVariant takes into account the errors is by a new representation
-of the reads. It represents them as an image where the aligned reads are
-represented as an image with each nucleic acid being color coded in a unique
-way.  
+The way DeepVariant takes into account the correlation of errors is by a
+new representation of the reads. It represents them as an image where the
+aligned reads are represented as an image with each nucleic acid being color
+coded in a unique way.  
 This allows to pass that image to a CNN and an [inception-v2](https://arxiv.org/abs/1512.00567) architecture.
 The fact that it goes into a CNN is what allows it to take into account the
-neighbouring pixels and dealing with correlation in read errors.
+neighbouring pixels and dealing with correlation in read errors.  
+Thanks to that I imagine that the kernel can learn filters taking the
+neighborhood of a nucleic acid in a read for classifying it as an error or
+as an actual SNP. It is reasonable to assume that the filters also
+learn that some errors are more likely depending on the previous positions, e.g.
+that a C is more likely to be an error than an SNP if preceded by many Gs.  
 The paper mentions that a tensor-like representation approach is probably
 being currently investigated.
+
+![DeepVariant reads representation](/images/DeepVariantRepr.png)
 
 I imagine that the confidence in the quality of the reads is also taken into
 account in that representation even though not mentionned.
